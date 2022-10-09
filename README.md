@@ -12,6 +12,7 @@ This python package is only supporting Python 3. The only external dependency is
 The package can be installed with pip.
 ```
 pip install jds6600
+pip install jds6600[test]
 ```
 # Usage
 

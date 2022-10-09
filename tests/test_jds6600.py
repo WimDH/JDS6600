@@ -1,5 +1,5 @@
 import pytest
-from src.jds6600 import JDS6600, WAVEFORMS
+from src.jds6600.core import JDS6600, WAVEFORMS
 
 
 def test_waveforms_list():

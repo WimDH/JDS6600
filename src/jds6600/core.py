@@ -31,7 +31,6 @@ class JDS6600:
 
     def __init__(self, port: str) -> None:
         self.port = port
-        self.connection = None
 
     def __enter__(self) -> serial.Serial:
         self.connection = serial.Serial(
@@ -99,23 +98,23 @@ class JDS6600:
             raise ValueError("The duty cycle should be bewteen 0% and 100%.")
 
     @staticmethod
-    def _parse_output(data: str) -> Union[str, bool]:
+    def _parse_output(data: str) -> str:
         """
         Return the value of the result:
         r20=1,1.
         returns 1,1
         """
         if data == ":ok":
-            return True
+            return "ok"
         elif len(data) > 3 and "=" in data:
             return data.split("=")[1][:-1]
 
-        return False
+        return ""
 
     def _send_command(self, command: str) -> str:
         """Send the command to the device and return the result."""
         self.connection.write(command.encode())
-        result = self.connection.readline().strip().decode()
+        result :str = self.connection.readline().strip().decode()
         return result
 
     def get_channels(self) -> Tuple:
@@ -124,17 +123,17 @@ class JDS6600:
         First entry is the status of channel 1, the second of channel 2.
         True means that the channel is enabled.
         """
-        result = self._parse_output(self._send_command(command=":r20=0.\n"))
+        result: str = self._parse_output(self._send_command(command=":r20=0.\n"))
         return tuple(map(lambda x: x == "1", result.split(",")))
-
-    def set_channels(self, channel1: bool, channel2: bool) -> None:
+        
+    def set_channels(self, channel1: bool, channel2: bool) -> str:
         """
         Enable or disable the channels.
         True enables a channel, False disables a channel.
         """
         if type(channel1) != bool or type(channel2) != bool:
             raise ValueError("Channel status should be either True or False!")
-        status = "{},{}".format(
+        status: str = "{},{}".format(
             (False, True).index(channel1), (False, True).index(channel2)
         )
         return self._parse_output(self._send_command(command=f":w20={status}.\n"))
@@ -144,34 +143,37 @@ class JDS6600:
         Get the type of waveform which is currently configured on a given channel.
         """
         self._validate_channel(channel)
-        waveform_id = self._parse_output(
-            self._send_command(command=f":r{20 + channel}=0.\n")
+        waveform_id: int = int(
+            self._parse_output(self._send_command(command=f":r{20 + channel}=0.\n"))
         )
-        return self._get_waveform_name(int(waveform_id))
+        return self._get_waveform_name(waveform_id)
 
-    def set_waveform(self, channel: int, value: str) -> bool:
+    def set_waveform(self, channel: int, value: str) -> str:
         """Set the waveform for a given channel."""
         self._validate_channel(channel)
         self._validate_waveform_name(value)
-        waveform_id = self._get_waveform_id(value)
+        waveform_id: int = self._get_waveform_id(value)
         return self._parse_output(
             self._send_command(command=f":w{20 + channel}={waveform_id}.\n")
         )
 
     def get_frequency(self, channel: int) -> float:
         """return the configured frequency for a give channel."""
+        frequency: str
+        magnitude_indicator: str
         self._validate_channel(channel)
         frequency, magnitude_indicator = self._parse_output(
             self._send_command(command=f":r{22 + channel}=0.\n")
         ).split(",")
-        frequency = float(frequency)
+        frequency_num: float = float(frequency)
+        magnitude_indicator_num: int = int(magnitude_indicator)
 
-        for i in range(int(magnitude_indicator)):
-            frequency = frequency / 1000
+        for i in range(magnitude_indicator_num):
+            frequency_num = frequency_num / 1000
 
-        return frequency / 100
+        return frequency_num / 100
 
-    def set_frequency(self, channel: int, value: float) -> bool:
+    def set_frequency(self, channel: int, value: float) -> str:
         """
         Set the frequency for one of the given channels.
         Frequency in in Hz.
@@ -193,7 +195,7 @@ class JDS6600:
             / 1000
         )
 
-    def set_amplitude(self, channel: int, value: float) -> bool:
+    def set_amplitude(self, channel: int, value: float) -> str:
         """
         Set the amplitude of the signal for a given channel.
         Amplitude is in Volt.
@@ -219,7 +221,7 @@ class JDS6600:
         )
         return (result - 1000) / 100
 
-    def set_offset(self, channel: int, value: float) -> bool:
+    def set_offset(self, channel: int, value: float) -> str:
         """
         Set the offset of the signal for a given channel.
         """
@@ -232,7 +234,7 @@ class JDS6600:
             self._send_command(command=f":w{26 + channel}={reg_val}.\n")
         )
 
-    def get_dutycycle(self, channel: int) -> int:
+    def get_dutycycle(self, channel: int) -> float:
         """
         Get the duty cycle of the signal for a given channel.
         result is in percent.
@@ -243,15 +245,15 @@ class JDS6600:
         )
         return round(result / 10, 1)
 
-    def set_dutycycle(self, channel: int, value: float) -> bool:
+    def set_dutycycle(self, channel: int, value: float) -> str:
         """
         Set the sudycycle of the signal for a given channel (in percent).
         """
-        dutycycle = round(value, 1)
+        dutycycle: float = round(value, 1)
         self._validate_channel(channel)
         self._validate_dutycycle(dutycycle)
 
-        reg_val = int((dutycycle * 10))
+        reg_val: int = int((dutycycle * 10))
         return self._parse_output(
             self._send_command(command=f":w{28 + channel}={reg_val}.\n")
         )
