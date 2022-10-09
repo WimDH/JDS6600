@@ -41,7 +41,7 @@ Or using the with statement
 Available methods:
 
 ```
->>> print(fg.get_channels())
+>>> fg.get_channels()
 (False, False)
 >>> fg.set_channels(channel1=True, channel2=True)
 'ok'
