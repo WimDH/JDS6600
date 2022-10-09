@@ -1,0 +1,25 @@
+# Testing and linting the application
+
+name: Linting and testing
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, 3.10]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python all python version
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+
+     - name: Install in editable mode
+       run: pip install -e .[test]
+
+     - name: Run Pytest
+       run: pytest .
