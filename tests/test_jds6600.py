@@ -71,7 +71,7 @@ def test_validate_dutycycle(signal_generator):
 
 def test_parse_output(signal_generator):
     """Test if we can parse the output we get from the JDS6600."""
-    assert signal_generator._parse_output(data=":ok") == 'ok'
-    assert signal_generator._parse_output(data=":r20=12345.") == "12345"
-    assert signal_generator._parse_output(data="") == ""
-    assert signal_generator._parse_output(data="funky_data") == ""
+    assert signal_generator._JDS6600__parse_output(data=":ok") == 'ok'
+    assert signal_generator._JDS6600__parse_output(data=":r20=12345.") == "12345"
+    assert signal_generator._JDS6600__parse_output(data="") == ""
+    assert signal_generator._JDS6600__parse_output(data="funky_data") == ""
