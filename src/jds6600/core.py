@@ -1,3 +1,4 @@
+from select import select
 import serial
 from typing import Union, Tuple
 
@@ -45,6 +46,22 @@ class JDS6600:
 
     def __exit__(self, *args, **kwargs) -> None:
         if self.connection and self.connection.is_open:
+            self.connection.close()
+
+    def connect(self):
+        """Connect to the Signal Generator."""
+        self.connection = serial.Serial(
+            port=self.port,
+            baudrate=115200,
+            bytesize=serial.EIGHTBITS,
+            stopbits=serial.STOPBITS_ONE,
+            parity=serial.PARITY_NONE,
+            timeout=1,
+        )
+        return self
+    
+    def close(self):
+        if self.connection:
             self.connection.close()
 
     @staticmethod
@@ -98,7 +115,7 @@ class JDS6600:
             raise ValueError("The duty cycle should be bewteen 0% and 100%.")
 
     @staticmethod
-    def _parse_output(data: str) -> str:
+    def __parse_output(data: str) -> str:
         """
         Return the value of the result:
         r20=1,1.
@@ -111,7 +128,7 @@ class JDS6600:
 
         return ""
 
-    def _send_command(self, command: str) -> str:
+    def __send_command(self, command: str) -> str:
         """Send the command to the device and return the result."""
         self.connection.write(command.encode())
         result :str = self.connection.readline().strip().decode()
@@ -123,7 +140,7 @@ class JDS6600:
         First entry is the status of channel 1, the second of channel 2.
         True means that the channel is enabled.
         """
-        result: str = self._parse_output(self._send_command(command=":r20=0.\n"))
+        result: str = self.__parse_output(self.__send_command(command=":r20=0.\n"))
         return tuple(map(lambda x: x == "1", result.split(",")))
         
     def set_channels(self, channel1: bool, channel2: bool) -> str:
@@ -136,7 +153,7 @@ class JDS6600:
         status: str = "{},{}".format(
             (False, True).index(channel1), (False, True).index(channel2)
         )
-        return self._parse_output(self._send_command(command=f":w20={status}.\n"))
+        return self.__parse_output(self.__send_command(command=f":w20={status}.\n"))
 
     def get_waveform(self, channel: int) -> str:
         """
@@ -144,7 +161,7 @@ class JDS6600:
         """
         self._validate_channel(channel)
         waveform_id: int = int(
-            self._parse_output(self._send_command(command=f":r{20 + channel}=0.\n"))
+            self.__parse_output(self.__send_command(command=f":r{20 + channel}=0.\n"))
         )
         return self._get_waveform_name(waveform_id)
 
@@ -153,8 +170,8 @@ class JDS6600:
         self._validate_channel(channel)
         self._validate_waveform_name(value)
         waveform_id: int = self._get_waveform_id(value)
-        return self._parse_output(
-            self._send_command(command=f":w{20 + channel}={waveform_id}.\n")
+        return self.__parse_output(
+            self.__send_command(command=f":w{20 + channel}={waveform_id}.\n")
         )
 
     def get_frequency(self, channel: int) -> float:
@@ -162,8 +179,8 @@ class JDS6600:
         frequency: str
         magnitude_indicator: str
         self._validate_channel(channel)
-        frequency, magnitude_indicator = self._parse_output(
-            self._send_command(command=f":r{22 + channel}=0.\n")
+        frequency, magnitude_indicator = self.__parse_output(
+            self.__send_command(command=f":r{22 + channel}=0.\n")
         ).split(",")
         frequency_num: float = float(frequency)
         magnitude_indicator_num: int = int(magnitude_indicator)
@@ -181,8 +198,8 @@ class JDS6600:
         """
         self._validate_channel(channel)
         value = int(value * 100)
-        return self._parse_output(
-            self._send_command(command=f":w{22 + channel}={value},0.\n")
+        return self.__parse_output(
+            self.__send_command(command=f":w{22 + channel}={value},0.\n")
         )
 
     def get_amplitude(self, channel: int) -> float:
@@ -190,7 +207,7 @@ class JDS6600:
         self._validate_channel(channel)
         return (
             float(
-                self._parse_output(self._send_command(command=f":r{24 + channel}=0.\n"))
+                self.__parse_output(self.__send_command(command=f":r{24 + channel}=0.\n"))
             )
             / 1000
         )
@@ -203,8 +220,8 @@ class JDS6600:
         self._validate_channel(channel)
         self._validate_amplitude(value)
 
-        return self._parse_output(
-            self._send_command(command=f":w{24 + channel}={int(value*1000)}.\n")
+        return self.__parse_output(
+            self.__send_command(command=f":w{24 + channel}={int(value*1000)}.\n")
         )
 
     def get_offset(self, channel: int) -> float:
@@ -217,7 +234,7 @@ class JDS6600:
         """
         self._validate_channel(channel)
         result = float(
-            self._parse_output(self._send_command(command=f":r{26 + channel}=0.\n"))
+            self.__parse_output(self.__send_command(command=f":r{26 + channel}=0.\n"))
         )
         return (result - 1000) / 100
 
@@ -230,8 +247,8 @@ class JDS6600:
         self._validate_offset(offset)
 
         reg_val = int((offset * 100) + 1000)
-        return self._parse_output(
-            self._send_command(command=f":w{26 + channel}={reg_val}.\n")
+        return self.__parse_output(
+            self.__send_command(command=f":w{26 + channel}={reg_val}.\n")
         )
 
     def get_dutycycle(self, channel: int) -> float:
@@ -241,7 +258,7 @@ class JDS6600:
         """
         self._validate_channel(channel)
         result = float(
-            self._parse_output(self._send_command(command=f":r{28 + channel}=0.\n"))
+            self.__parse_output(self.__send_command(command=f":r{28 + channel}=0.\n"))
         )
         return round(result / 10, 1)
 
@@ -254,6 +271,6 @@ class JDS6600:
         self._validate_dutycycle(dutycycle)
 
         reg_val: int = int((dutycycle * 10))
-        return self._parse_output(
-            self._send_command(command=f":w{28 + channel}={reg_val}.\n")
+        return self.__parse_output(
+            self.__send_command(command=f":w{28 + channel}={reg_val}.\n")
         )

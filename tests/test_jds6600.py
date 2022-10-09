@@ -1,5 +1,5 @@
 import pytest
-from src.jds6600.core import JDS6600, WAVEFORMS
+from jds6600.core import JDS6600, WAVEFORMS
 
 
 def test_waveforms_list():
@@ -71,7 +71,7 @@ def test_validate_dutycycle(signal_generator):
 
 def test_parse_output(signal_generator):
     """Test if we can parse the output we get from the JDS6600."""
-    assert signal_generator._parse_output(data=":ok") == True
+    assert signal_generator._parse_output(data=":ok") == 'ok'
     assert signal_generator._parse_output(data=":r20=12345.") == "12345"
-    assert signal_generator._parse_output(data="") == False
-    assert signal_generator._parse_output(data="funky_data") == False
+    assert signal_generator._parse_output(data="") == ""
+    assert signal_generator._parse_output(data="funky_data") == ""

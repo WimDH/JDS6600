@@ -1,1 +1,1 @@
-from jds6600.core import JDS6600  # noqa: F401
+from jds6600.core import JDS6600, WAVEFORMS  # noqa: F401
