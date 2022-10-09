@@ -1,5 +1,5 @@
 # About the Project
-The JDS6600 is a 2-channel DDS signal generator witha built-in frequency counter. It comes in a few flafours, one cam generate signals up to 60MHz, the lite version only up to 15MHz
+The JDS6600 is a 2-channel DDS signal generator with a built-in frequency counter. It comes in a few flafours, one cam generate signals up to 60MHz, the lite version only up to 15MHz
 The Signal generator can be controlled via a USB port, and via the control panel.
 This module makes it easier to control the signal generator via the USB port. It abstacts most of 
 functions offered via the remote control.
@@ -72,7 +72,7 @@ If you want to contribute to this project, you're mostly welcome! Just keep a fe
 1. Fork the project
 2. Create a branch (`git checkout -b myfeature`)
 3. Check your code using `flake8` and `mypy`
-4. Commit your changes (`git commit added a nice feature`)
+4. Commit your changes (`git commit -m "added a nice feature"`)
 5. Push your branch to github (`git push origin myfeature`)
 6. Open a Pull Request 
 
