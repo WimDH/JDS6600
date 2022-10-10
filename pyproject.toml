@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "jds6600"
-version = "0.0.1"
+version = "1.0.0"
 authors = [
   { name="Wim De Hul", email="wim@dehul.net" },
 ]
@@ -26,7 +26,6 @@ test = [
     "mypy==0.982",
     "black==22.10.0",
     "flake8==5.0.4",
-    "build==0.8.0",
 ]
 
 [project.urls]

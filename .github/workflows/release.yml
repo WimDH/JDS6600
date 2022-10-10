@@ -25,4 +25,4 @@ jobs:
 
       - name: Publish package on pypi.org
         run: |
-          twine upload -u "__token__" -p "${{secrets.TEST_PYPI_TOKEN}}" --repository testpypi dist/*
+          twine upload -u "__token__" -p "${{secrets.PYPI_TOKEN}}" dist/*
