@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
     steps:
       - uses: actions/checkout@v3
 
@@ -36,5 +36,7 @@ jobs:
         run: pip install build twine
       
       - name: Publish package on pypi.org
+        with:
+          python-serion: '3.7'
         run: |
           twine upload -u __token__ -p ${{secrets.TEST_PYPI_TOKEN}} --repository testpi dist/*
