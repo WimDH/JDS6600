@@ -1,6 +1,6 @@
 # Testing and linting the application
 
-name: Linting and testing
+name: building python package
 on:
   push:
     branches:
@@ -31,3 +31,10 @@ jobs:
 
       - name: Run Pytest
         run: 'pytest tests'
+      
+      - name: Install build tools
+        run: pip install build twine
+      
+      - name: Publish package on pypi.org
+        run: |
+          twine upload -u __token__ -p ${{secrets.TEST_PYPI_TOKEN}} --repository testpi dist/*
