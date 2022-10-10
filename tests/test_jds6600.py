@@ -21,12 +21,13 @@ def test_waveforms_list():
         "exp-decay",  # 13
         "multi-tone",  # 14
         "sinc",  # 15
-        "lorenz",  # 16        
+        "lorenz",  # 16
     ]
+
 
 @pytest.fixture
 def signal_generator():
-    return JDS6600(port="/dev/fakeUSB") 
+    return JDS6600(port="/dev/fakeUSB")
 
 
 def test_jds6600_get_waveform_id(signal_generator):
@@ -38,36 +39,42 @@ def test_jds6600_get_waveform_name(signal_generator):
     """Test of we can get the waveform name from a waveform id."""
     assert signal_generator._get_waveform_name(6) == "dc"
 
+
 def test_validate_channel(signal_generator):
     """Test the channel validation."""
-    
+
     assert signal_generator._validate_channel(value=1) is None
     with pytest.raises(ValueError):
         assert signal_generator._validate_channel(value=3)
 
+
 def test_validate_waveform(signal_generator):
     """Test the waveform validation."""
-    assert signal_generator._validate_waveform_name(value="sine") is None    
+    assert signal_generator._validate_waveform_name(value="sine") is None
     with pytest.raises(ValueError):
         assert signal_generator._validate_waveform_name(value="mexican wave")
 
+
 def test_validate_amplitude(signal_generator):
     """Test the amplitude validation."""
-    assert signal_generator._validate_amplitude(value=1) is None    
+    assert signal_generator._validate_amplitude(value=1) is None
     with pytest.raises(ValueError):
         assert signal_generator._validate_amplitude(value=999)
 
+
 def test_validate_offset(signal_generator):
     """Test the offset validation."""
-    assert signal_generator._validate_offset(value=1) is None    
+    assert signal_generator._validate_offset(value=1) is None
     with pytest.raises(ValueError):
         assert signal_generator._validate_offset(value=1000)
+
 
 def test_validate_dutycycle(signal_generator):
     """Test the dutycycle validation."""
     assert signal_generator._validate_dutycycle(value=10) is None
     with pytest.raises(ValueError):
         assert signal_generator._validate_dutycycle(value=-50)
+
 
 def test_parse_output(signal_generator):
     """Test if we can parse the output we get from the JDS6600."""

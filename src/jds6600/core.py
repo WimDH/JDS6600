@@ -1,6 +1,5 @@
-from select import select
 import serial
-from typing import Union, Tuple
+from typing import Tuple
 
 
 # Allowed waveforms and their mapping.
@@ -59,7 +58,7 @@ class JDS6600:
             timeout=1,
         )
         return self
-    
+
     def close(self):
         if self.connection:
             self.connection.close()
@@ -131,7 +130,7 @@ class JDS6600:
     def __send_command(self, command: str) -> str:
         """Send the command to the device and return the result."""
         self.connection.write(command.encode())
-        result :str = self.connection.readline().strip().decode()
+        result: str = self.connection.readline().strip().decode()
         return result
 
     def get_channels(self) -> Tuple:
@@ -142,7 +141,7 @@ class JDS6600:
         """
         result: str = self.__parse_output(self.__send_command(command=":r20=0.\n"))
         return tuple(map(lambda x: x == "1", result.split(",")))
-        
+
     def set_channels(self, channel1: bool, channel2: bool) -> str:
         """
         Enable or disable the channels.
