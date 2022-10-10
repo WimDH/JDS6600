@@ -4,25 +4,30 @@ name: Linting and testing
 on:
   push:
     branches:
-      - main  
+      - development
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, 3.10]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python all python version
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: x64
 
       - name: Install in editable mode
         run: 'pip install -e .[test]'
 
+      - name: Lintint with flake8
+        run: flake8 . --statistics
+
+      - name: Type cheking with mypy
+        run: mypy src/ tests/
+
       - name: Run Pytest
-        run: 'pytest .'
+        run: 'pytest tests'
