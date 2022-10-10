@@ -7,7 +7,7 @@ on:
       - development
 
 jobs:
-  test:
+  testing:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,6 +33,7 @@ jobs:
         run: 'pytest tests'
       
   build:
+    needs: testing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -47,4 +48,4 @@ jobs:
 
       - name: Publish package on pypi.org
         run: |
-          twine upload -u __token__ -p ${{secrets.TEST_PYPI_TOKEN}} --repository testpi dist dist/*
+          twine upload -u "__token__" -p "${{secrets.TEST_PYPI_TOKEN}}" --repository testpi dist/*
