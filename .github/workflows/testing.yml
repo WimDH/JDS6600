@@ -37,6 +37,6 @@ jobs:
       
       - name: Publish package on pypi.org
         with:
-          python-serion: '3.7'
+          python-version: '3.7'
         run: |
           twine upload -u __token__ -p ${{secrets.TEST_PYPI_TOKEN}} --repository testpi dist/*
