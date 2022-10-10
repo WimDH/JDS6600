@@ -1,0 +1,33 @@
+# Testing and linting the application
+
+name: building and releasing the python package
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10']
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python all python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install in editable mode
+        run: 'pip install -e .[test]'
+
+      - name: Lintint with flake8
+        run: flake8 . --statistics
+
+      - name: Type cheking with mypy
+        run: mypy src/ tests/
+
+      - name: Run Pytest
+        run: 'pytest tests'
