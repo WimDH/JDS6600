@@ -46,7 +46,9 @@ jobs:
       - name: Install build tools
         run: pip install build twine
 
+      - name: build the package
+        run: python -m  build
+
       - name: Publish package on pypi.org
         run: |
-          ls -la
           twine upload -u "__token__" -p "${{secrets.TEST_PYPI_TOKEN}}" --repository testpypi dist/*
