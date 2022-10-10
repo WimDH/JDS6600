@@ -33,7 +33,7 @@ jobs:
         run: 'pytest tests'
       
   build:
-        - name: Set up Python all python version
+      - name: Set up Python all python version
         uses: actions/setup-python@v4
         with:
           python-version: "3.7"
