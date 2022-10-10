@@ -1,10 +1,10 @@
 # Testing and linting the application
 
-name: building python package
+name: building and releasing the python package
 on:
-  push:
-    branches:
-      - development
+  release:
+    types:
+      - published
 
 jobs:
   testing:
