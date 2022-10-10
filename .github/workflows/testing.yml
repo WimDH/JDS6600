@@ -32,11 +32,15 @@ jobs:
       - name: Run Pytest
         run: 'pytest tests'
       
+  build:
+        - name: Set up Python all python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+
       - name: Install build tools
         run: pip install build twine
-      
+
       - name: Publish package on pypi.org
-        with:
-          python-version: '3.7'
         run: |
           twine upload -u __token__ -p ${{secrets.TEST_PYPI_TOKEN}} --repository testpi dist dist/*
