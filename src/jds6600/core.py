@@ -103,7 +103,7 @@ class JDS6600:
         Raise exception if the amplitude is negative or more than 10v.
         """
         if not (-10 < value < 10):
-            raise ValueError("The offset should be bewteen -9.99V and 9.99V.")
+            raise ValueError("The offset should be between -9.99V and 9.99V.")
 
     @staticmethod
     def _validate_dutycycle(value: float) -> None:
