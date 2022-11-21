@@ -206,7 +206,9 @@ class JDS6600:
         self._validate_channel(channel)
         return (
             float(
-                self.__parse_output(self.__send_command(command=f":r{24 + channel}=0.\n"))
+                self.__parse_output(
+                    self.__send_command(command=f":r{24 + channel}=0.\n")
+                )
             )
             / 1000
         )
