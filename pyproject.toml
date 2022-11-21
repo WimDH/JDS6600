@@ -28,6 +28,9 @@ test = [
     "flake8==5.0.4",
 ]
 
+[project.scripts]
+jds6600 = "jds6600.cli:main"
+
 [project.urls]
 "Homepage" = "https://github.com/WimDH/JDS6600"
 "Bug Tracker" = "https://github.com/WimDH/JDS6600/issues"
