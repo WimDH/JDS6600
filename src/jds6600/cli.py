@@ -96,7 +96,7 @@ def _add_common_args(
 ) -> None:
     """Arguments that apply to every command. Also map the function to run to the command."""
     subparser.add_argument(
-        "-p", "--port", help="USB port where the waveform generator is connected."
+        "-p", "--port", required=True, help="USB port where the waveform generator is connected."
     )
     subparser.add_argument(
         "-c",
@@ -165,6 +165,11 @@ def cli_builder() -> argparse.ArgumentParser:
 def main():
     """Main entry point."""
     parser = cli_builder()
+
+    if len(sys.argv) < 2:
+        parser.parse_args(["-h"])
+        sys.exit(2)
+    
     args = parser.parse_args()
     args.func(args)
 
