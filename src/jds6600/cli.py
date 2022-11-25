@@ -5,7 +5,7 @@ import json
 import sys
 
 
-def f_channel(args: argparse.ArgumentParser) -> None:
+def f_channel(args: argparse.Namespace) -> None:
     """Operations on the channels."""
     out_dict = {}
     channels = _define_channels(args.channel_id)
@@ -24,32 +24,32 @@ def f_channel(args: argparse.ArgumentParser) -> None:
     dump_output(args.print_json, out_dict)
 
 
-def f_waveform(args: argparse.ArgumentParser) -> None:
+def f_waveform(args: argparse.Namespace) -> None:
     """Operations on the waveform."""
     _generic_channel_operation(args, "waveform")
 
 
-def f_frequency(args: argparse.ArgumentParser) -> None:
+def f_frequency(args: argparse.Namespace) -> None:
     """Operations on the frequency."""
     _generic_channel_operation(args, "frequency")
 
 
-def f_amplitude(args: argparse.ArgumentParser) -> None:
+def f_amplitude(args: argparse.Namespace) -> None:
     """Operations on the amplitude."""
     _generic_channel_operation(args, "amplitude")
 
 
-def f_offset(args: argparse.ArgumentParser) -> None:
+def f_offset(args: argparse.Namespace) -> None:
     """Operations on the offset."""
     _generic_channel_operation(args, "offset")
 
 
-def f_dutycycle(args: argparse.ArgumentParser) -> None:
+def f_dutycycle(args: argparse.Namespace) -> None:
     """Operations on the offset."""
     _generic_channel_operation(args, "dutycycle")
 
 
-def _generic_channel_operation(args: argparse.ArgumentParser, option: str) -> None:
+def _generic_channel_operation(args: argparse.Namespace, option: str) -> None:
     """
     Wrapper for most channel operations. Only the channel status operations require
     a different way of handling.
@@ -96,7 +96,10 @@ def _add_common_args(
 ) -> None:
     """Arguments that apply to every command. Also map the function to run to the command."""
     subparser.add_argument(
-        "-p", "--port", required=True, help="USB port where the waveform generator is connected."
+        "-p",
+        "--port",
+        required=True,
+        help="USB port where the waveform generator is connected.",
     )
     subparser.add_argument(
         "-c",
@@ -129,31 +132,44 @@ def cli_builder() -> argparse.ArgumentParser:
         "-v", "--value", type=int, help="The channel status (0=off, 1=on)."
     )
 
-    p_waveform = subparsers.add_parser("waveform", help="Read or set the waveform type.")
+    p_waveform = subparsers.add_parser(
+        "waveform", help="Read or set the waveform type."
+    )
     _add_common_args(p_waveform, f_waveform)
     p_waveform.add_argument(
-        "-v", "--value", type=str, help="The type of waveform ({}).".format(", ".join(WAVEFORMS))
+        "-v",
+        "--value",
+        type=str,
+        help="The type of waveform ({}).".format(", ".join(WAVEFORMS)),
     )
 
-    p_frequency = subparsers.add_parser("frequency", help="Read or set the frequency (in Hz).")
+    p_frequency = subparsers.add_parser(
+        "frequency", help="Read or set the frequency (in Hz)."
+    )
     _add_common_args(p_frequency, f_frequency)
     p_frequency.add_argument(
         "-v", "--value", type=float, help="The Frequency of the waveform in Hz."
     )
 
-    p_amplitude = subparsers.add_parser("amplitude", help="Read or set the amplitude (in Volt).")
+    p_amplitude = subparsers.add_parser(
+        "amplitude", help="Read or set the amplitude (in Volt)."
+    )
     _add_common_args(p_amplitude, f_amplitude)
     p_amplitude.add_argument(
         "-v", "--value", type=float, help="The amplitude of the waveform in Volt."
     )
 
-    p_offset = subparsers.add_parser("offset", help="Read or set the offset of the signal (in Volt).")
+    p_offset = subparsers.add_parser(
+        "offset", help="Read or set the offset of the signal (in Volt)."
+    )
     _add_common_args(p_offset, f_offset)
     p_offset.add_argument(
         "-v", "--value", type=float, help="The offset of the waveform in Volt."
     )
 
-    p_dutycycle = subparsers.add_parser("dutycycle", help="Read or set the duty cycle (in percent).")
+    p_dutycycle = subparsers.add_parser(
+        "dutycycle", help="Read or set the duty cycle (in percent)."
+    )
     _add_common_args(p_dutycycle, f_dutycycle)
     p_dutycycle.add_argument(
         "-v", "--value", type=float, help="The duty cycle of the waveform in percent."
@@ -169,7 +185,7 @@ def main():
     if len(sys.argv) < 2:
         parser.parse_args(["-h"])
         sys.exit(2)
-    
+
     args = parser.parse_args()
     args.func(args)
 
