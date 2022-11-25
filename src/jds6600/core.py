@@ -14,11 +14,11 @@ WAVEFORMS = [
     "half_wave",  # 7
     "full_wave",  # 8
     "pos_ladder",  # 9
-    "neg-ladder",  # 10
+    "neg_ladder",  # 10
     "noise",  # 11
-    "exp-rise",  # 12
-    "exp-decay",  # 13
-    "multi-tone",  # 14
+    "exp_rise",  # 12
+    "exp_decay",  # 13
+    "multi_tone",  # 14
     "sinc",  # 15
     "lorenz",  # 16
 ]

@@ -1,7 +1,7 @@
 from jds6600.cli import cli_builder
 
 
-def test_channel():
+def test_cli_builder():
     """Test the channel command."""
     parser = cli_builder()
     args = parser.parse_args("channel -p /dev/ttyUSB3 -c 1 -v 2".split())
