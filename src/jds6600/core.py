@@ -14,11 +14,11 @@ WAVEFORMS = [
     "half_wave",  # 7
     "full_wave",  # 8
     "pos_ladder",  # 9
-    "neg-ladder",  # 10
+    "neg_ladder",  # 10
     "noise",  # 11
-    "exp-rise",  # 12
-    "exp-decay",  # 13
-    "multi-tone",  # 14
+    "exp_rise",  # 12
+    "exp_decay",  # 13
+    "multi_tone",  # 14
     "sinc",  # 15
     "lorenz",  # 16
 ]
@@ -103,7 +103,7 @@ class JDS6600:
         Raise exception if the amplitude is negative or more than 10v.
         """
         if not (-10 < value < 10):
-            raise ValueError("The offset should be bewteen -9.99V and 9.99V.")
+            raise ValueError("The offset should be between -9.99V and 9.99V.")
 
     @staticmethod
     def _validate_dutycycle(value: float) -> None:
@@ -206,7 +206,9 @@ class JDS6600:
         self._validate_channel(channel)
         return (
             float(
-                self.__parse_output(self.__send_command(command=f":r{24 + channel}=0.\n"))
+                self.__parse_output(
+                    self.__send_command(command=f":r{24 + channel}=0.\n")
+                )
             )
             / 1000
         )

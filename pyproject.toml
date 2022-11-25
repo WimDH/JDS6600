@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "jds6600"
-version = "1.0.0"
+version = "1.1.0"
 authors = [
   { name="Wim De Hul", email="wim@dehul.net" },
 ]
@@ -27,6 +27,9 @@ test = [
     "black==22.10.0",
     "flake8==5.0.4",
 ]
+
+[project.scripts]
+jds6600 = "jds6600.cli:main"
 
 [project.urls]
 "Homepage" = "https://github.com/WimDH/JDS6600"

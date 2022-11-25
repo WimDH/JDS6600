@@ -15,11 +15,11 @@ def test_waveforms_list():
         "half_wave",  # 7
         "full_wave",  # 8
         "pos_ladder",  # 9
-        "neg-ladder",  # 10
+        "neg_ladder",  # 10
         "noise",  # 11
-        "exp-rise",  # 12
-        "exp-decay",  # 13
-        "multi-tone",  # 14
+        "exp_rise",  # 12
+        "exp_decay",  # 13
+        "multi_tone",  # 14
         "sinc",  # 15
         "lorenz",  # 16
     ]
@@ -78,7 +78,7 @@ def test_validate_dutycycle(signal_generator):
 
 def test_parse_output(signal_generator):
     """Test if we can parse the output we get from the JDS6600."""
-    assert signal_generator._JDS6600__parse_output(data=":ok") == 'ok'
+    assert signal_generator._JDS6600__parse_output(data=":ok") == "ok"
     assert signal_generator._JDS6600__parse_output(data=":r20=12345.") == "12345"
     assert signal_generator._JDS6600__parse_output(data="") == ""
     assert signal_generator._JDS6600__parse_output(data="funky_data") == ""
