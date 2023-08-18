@@ -92,10 +92,10 @@ class JDS6600:
     @staticmethod
     def _validate_amplitude(value: float) -> None:
         """
-        Raise exception if the amplitude is negative or more than 10v.
+        Raise exception if the amplitude is negative or more than 20v.
         """
-        if value < 0.001 or value > 10:
-            raise ValueError("The amplitude should be bewteen 1mV and 10V.")
+        if value < 0.001 or value > 20:
+            raise ValueError("The amplitude should be bewteen 1mV and 20V.")
 
     @staticmethod
     def _validate_offset(value: float) -> None:
